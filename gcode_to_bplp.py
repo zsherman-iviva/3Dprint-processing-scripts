@@ -88,16 +88,10 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 
 
 			if relative:
-				#X = prev_X + (line.get_param("X") or 0)
-				#Y = prev_Y + (line.get_param("Y") or 0)
-				#Z = prev_Z + (line.get_param("Z") or 0)
 				X = prev_X + (line.get_param("X") if line.get_param("X") is not None else 0)
 				Y = prev_Y + (line.get_param("Y") if line.get_param("Y") is not None else 0)
 				Z = prev_Z + (line.get_param("Z") if line.get_param("Z") is not None else 0)
 			else: # if absolute
-				#X = line.get_param("X") or prev_X
-				#Y = line.get_param("Y") or prev_Y
-				#Z = line.get_param("Z") or prev_Z
 				X = line.get_param("X") if line.get_param("X") is not None else prev_X
 				Y = line.get_param("Y") if line.get_param("Y") is not None else prev_Y
 				Z = line.get_param("Z") if line.get_param("Z") is not None else prev_Z
@@ -112,7 +106,7 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 
 			# do twice because Bioplotter does not account for lines with <2 points
 			last_points.append(ET.fromstring(coords_to_LinePoint(X, Y, Z)))
-			last_points.append(ET.fromstring(coords_to_LinePoint(X, Y, Z)))
+			last_points.append(ET.fromstring(coords_to_LinePoint(X+0.2, Y, Z))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
 
 		case "G1": # move and extrude
 			lines = root.find("Lines")
@@ -183,16 +177,10 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 							new_points_element.append(last_point)
 
 			if relative:
-				#X = prev_X + (line.get_param("X") or 0)
-				#Y = prev_Y + (line.get_param("Y") or 0)
-				#Z = prev_Z + (line.get_param("Z") or 0)
 				X = prev_X + (line.get_param("X") if line.get_param("X") is not None else 0)
 				Y = prev_Y + (line.get_param("Y") if line.get_param("Y") is not None else 0)
 				Z = prev_Z + (line.get_param("Z") if line.get_param("Z") is not None else 0)
 			else: # if absolute
-				#X = line.get_param("X") or prev_X
-				#Y = line.get_param("Y") or prev_Y
-				#Z = line.get_param("Z") or prev_Z
 				X = line.get_param("X") if line.get_param("X") is not None else prev_X
 				Y = line.get_param("Y") if line.get_param("Y") is not None else prev_Y
 				Z = line.get_param("Z") if line.get_param("Z") is not None else prev_Z

@@ -13,7 +13,7 @@ translate_Z = float(input("Enter a distance to translate in Z (or leave blank fo
 def rename_line(line, new_number):
 	name = line.find('Name')
 
-	if name.text[-1].isdigit:
+	if name.text[-1].isdigit():
 		head = name.text.rstrip('0123456789')
 		tail = str(new_number)
 		name.text = head+tail
