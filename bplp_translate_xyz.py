@@ -11,15 +11,15 @@ tree = ET.parse(input_file)
 root = tree.getroot()
 
 for X_coord in root.iter('X'):
-	new_X_coord = float(X_coord.text) + translate_X
+	new_X_coord = round((float(X_coord.text) + translate_X), 2)
 	X_coord.text = str(new_X_coord)
 
 for Y_coord in root.iter('Y'):
-	new_Y_coord = float(Y_coord.text) + translate_Y
+	new_Y_coord = round((float(Y_coord.text) + translate_Y), 2)
 	Y_coord.text = str(new_Y_coord)
 
 for Z_coord in root.iter('Z'):
-	new_Z_coord = float(Z_coord.text) + translate_Z
+	new_Z_coord = round((float(Z_coord.text) + translate_Z), 2)
 	Z_coord.text = str(new_Z_coord)
 
 tree.write(output_file, xml_declaration=True)

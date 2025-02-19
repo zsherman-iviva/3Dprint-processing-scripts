@@ -110,7 +110,7 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 			# no need for try/except here because G0 always creates a new line that can be appended to
 			last_points = root.findall("./Lines/Line/Points")[-1]
 
-			# do twice because unsure if Bioplotter accounts for lines with <2 points
+			# do twice because Bioplotter does not account for lines with <2 points
 			last_points.append(ET.fromstring(coords_to_LinePoint(X, Y, Z)))
 			last_points.append(ET.fromstring(coords_to_LinePoint(X, Y, Z)))
 
