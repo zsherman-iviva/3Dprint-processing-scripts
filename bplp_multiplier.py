@@ -8,6 +8,7 @@ n_instances = int(input("Enter the desired total number of instances (or leave b
 translate_X = float(input("Enter a distance to translate in X (or leave blank for 0): ") or 0)
 translate_Y = float(input("Enter a distance to translate in Y (or leave blank for 0): ") or 0)
 translate_Z = float(input("Enter a distance to translate in Z (or leave blank for 0): ") or 0)
+z_hop = float(input("Enter the desired Z hop between instances (or leave blank for 0): ") or 0)
 
 
 def rename_line(line, new_number):
@@ -37,6 +38,22 @@ def translate_xyz(lines, translate_X, translate_Y, translate_Z):
 			Z_coord.text = str(new_Z_coord)
 
 
+def coords_to_LinePoint(X, Y, Z):
+
+	X = round(X, 2)
+	Y = round(Y, 2)
+	Z = round(Z, 2)
+
+	LinePoint = f"""
+		<LinePoint>
+			<X>{X}</X>
+			<Y>{Y}</Y>
+			<Z>{Z}</Z>
+		</LinePoint>
+		"""
+	return LinePoint
+
+
 def main():
 	tree = ET.parse(input_file)
 	root = tree.getroot()
@@ -56,11 +73,30 @@ def main():
 			#print('line id: ' + str(line_id) + ' | i: ' + str(i) + ' | len(new_lines): ' + str(len(new_lines)) + ' | new number: ' + str(new_number))
 			rename_line(line, new_number)
 			#print(line.find('Name').text)
-			
-		translate_xyz(new_lines, translate_X, translate_Y, translate_Z)
+		
+		if len(all_lines) >= len(new_lines): # only translate subsequent instances, leave original instance alone
+			translate_xyz(new_lines, translate_X, translate_Y, translate_Z)
 
 		for line in new_lines:
 			all_lines.append(line)
+
+		new_lines = copy.deepcopy(new_lines) # not sure why having this line here makes it work, but it does...
+
+		#print(len(new_lines[0].findall("Points/LinePoint"))) # prints number of linepoints in new_lines
+
+		if z_hop > 0:
+			last_linepoint = all_lines.findall('.//LinePoint')[-1]
+
+			X = float(last_linepoint.find("X").text)
+			Y = float(last_linepoint.find("Y").text)
+			Z = float(last_linepoint.find("Z").text)
+
+			last_line = all_lines.findall('.//Points')[-1]
+
+			if i < (n_instances - 1): # if not the last instance
+				# do twice because Bioplotter does not account for lines with <2 points
+				last_line.append(ET.fromstring(coords_to_LinePoint(X+0.2, Y, Z+10))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
+				last_line.append(ET.fromstring(coords_to_LinePoint(X+translate_X, Y+translate_Y, Z+10+translate_Z))) # move to next anticipated instance
 
 	ET.indent(root)
 	tree.write(output_file, encoding="utf-8")
