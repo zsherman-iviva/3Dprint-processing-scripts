@@ -85,18 +85,24 @@ def main():
 		#print(len(new_lines[0].findall("Points/LinePoint"))) # prints number of linepoints in new_lines
 
 		if z_hop > 0:
+			first_linepoint = all_lines.findall('.//Points')[-1].find('LinePoint')
 			last_linepoint = all_lines.findall('.//LinePoint')[-1]
 
-			X = float(last_linepoint.find("X").text)
-			Y = float(last_linepoint.find("Y").text)
-			Z = float(last_linepoint.find("Z").text)
+			first_X = float(first_linepoint.find("X").text)
+			first_Y = float(first_linepoint.find("Y").text)
+			first_Z = float(first_linepoint.find("Z").text)
+
+			last_X = float(last_linepoint.find("X").text)
+			last_Y = float(last_linepoint.find("Y").text)
+			last_Z = float(last_linepoint.find("Z").text)
 
 			last_line = all_lines.findall('.//Points')[-1]
 
+			if i > 0: # if not the first instance
+				last_line.insert(0, ET.fromstring(coords_to_LinePoint(first_X+0.2, first_Y, first_Z+z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
+
 			if i < (n_instances - 1): # if not the last instance
-				# do twice because Bioplotter does not account for lines with <2 points
-				last_line.append(ET.fromstring(coords_to_LinePoint(X+0.2, Y, Z+10))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
-				last_line.append(ET.fromstring(coords_to_LinePoint(X+translate_X, Y+translate_Y, Z+10+translate_Z))) # move to next anticipated instance
+				last_line.append(ET.fromstring(coords_to_LinePoint(last_X+0.2, last_Y, last_Z+z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
 
 	ET.indent(root)
 	tree.write(output_file, encoding="utf-8")
