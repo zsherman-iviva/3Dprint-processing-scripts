@@ -8,7 +8,7 @@ n_instances = int(input("Enter the desired total number of instances (or leave b
 translate_X = float(input("Enter a distance to translate in X (or leave blank for 0): ") or 0)
 translate_Y = float(input("Enter a distance to translate in Y (or leave blank for 0): ") or 0)
 translate_Z = float(input("Enter a distance to translate in Z (or leave blank for 0): ") or 0)
-z_hop = float(input("Enter the desired Z hop between instances (or leave blank for 0): ") or 0)
+Z_hop = float(input("Enter the desired Z hop between instances (or leave blank for 0): ") or 0)
 
 
 def rename_line(line, new_number):
@@ -84,7 +84,7 @@ def main():
 
 		#print(len(new_lines[0].findall("Points/LinePoint"))) # prints number of linepoints in new_lines
 
-		if z_hop > 0:
+		if Z_hop > 0:
 			first_linepoint = all_lines.findall('.//Points')[-1].find('LinePoint')
 			last_linepoint = all_lines.findall('.//LinePoint')[-1]
 
@@ -99,10 +99,10 @@ def main():
 			last_line = all_lines.findall('.//Points')[-1]
 
 			if i > 0: # if not the first instance
-				last_line.insert(0, ET.fromstring(coords_to_LinePoint(first_X+0.2, first_Y, first_Z+z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
+				last_line.insert(0, ET.fromstring(coords_to_LinePoint(first_X+0.2, first_Y, first_Z+Z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
 
 			if i < (n_instances - 1): # if not the last instance
-				last_line.append(ET.fromstring(coords_to_LinePoint(last_X+0.2, last_Y, last_Z+z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
+				last_line.append(ET.fromstring(coords_to_LinePoint(last_X+0.2, last_Y, last_Z+translate_Z+Z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
 
 	ET.indent(root)
 	tree.write(output_file, encoding="utf-8")
