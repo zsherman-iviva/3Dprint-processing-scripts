@@ -59,6 +59,7 @@ def main():
 	root = tree.getroot()
 
 	all_lines = root.find('Lines')
+	num_lines = len(all_lines)
 	original_lines = root.findall('.//Line')
 	new_lines = original_lines # copy.deepcopy(original_lines)
 
@@ -96,10 +97,11 @@ def main():
 			last_Y = float(last_linepoint.find("Y").text)
 			last_Z = float(last_linepoint.find("Z").text)
 
+			last_instance = all_lines.findall('.//Points')[-num_lines]
 			last_line = all_lines.findall('.//Points')[-1]
 
 			if i > 0: # if not the first instance
-				last_line.insert(0, ET.fromstring(coords_to_LinePoint(first_X+0.2, first_Y, first_Z+Z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
+				last_instance.insert(0, ET.fromstring(coords_to_LinePoint(first_X+0.2, first_Y, first_Z+Z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
 
 			if i < (n_instances - 1): # if not the last instance
 				last_line.append(ET.fromstring(coords_to_LinePoint(last_X+0.2, last_Y, last_Z+translate_Z+Z_hop))) # need to add >0.1 mm (or other Minimum Length), otherwise Bioplotter will ignore line
