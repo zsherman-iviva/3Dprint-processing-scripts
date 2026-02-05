@@ -62,12 +62,14 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 
 			# just get a speed somehow
 			try:
-				F = line.get_param("F")
+				if separate_method != 1:
+					F = line.get_param("F")					
 				if F is None:
 					F = prev_G0_F
+
 			except:
-				try:
-					F = speed
+				try:					
+					F = speed*10 # speed*10 because Bioplotter speed is usually F/10, and in this scope F will always be processed with if/else
 				except:
 					F = 500
 
@@ -113,7 +115,7 @@ def process_line(root, line, prev_X, prev_Y, prev_Z, prev_F, prev_G0_F):
 
 			match separate_method:
 				case 1: # no separation
-					F = speed
+					F = speed # not speed*10 here because in the scope of this case speed is used directly
 					if len(lines) < 1: # if no lines,
 						# create one
 						lines.append(ET.fromstring(f"""
