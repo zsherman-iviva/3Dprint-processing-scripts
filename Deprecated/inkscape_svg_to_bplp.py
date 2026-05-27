@@ -77,7 +77,14 @@ def main():
 	for g in svg_root.findall('{*}g'):
 		for path in g.findall('{*}path'):
 			d = path.get('d')
+			print(d)
 			process_path(root, d)
+
+	#for path in svg_root.findall('{*}path'):
+	#	print(path)
+	#	d = path.get('d')
+	#	print(d)
+	#	process_path(root, d)
 
 	ET.indent(root)
 	tree.write(output_file, encoding="utf-8")
