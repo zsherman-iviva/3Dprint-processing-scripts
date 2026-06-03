@@ -1,5 +1,5 @@
 input_file = input("Enter path to Gcode file: ").replace("\"", '') # ignore quotes if inserted by Windows
-output_file = input("Enter path to save BPLP to: ").replace("\"", '') # ignore quotes if inserted by Windows
+output_file = input("Enter path to save Gcode file to: ").replace("\"", '') # ignore quotes if inserted by Windows
 
 all_lines = []
 
