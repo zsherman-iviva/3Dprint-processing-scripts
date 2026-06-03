@@ -19,7 +19,7 @@ def rename_line(line, new_number):
 		tail = str(new_number)
 		name.text = head+tail
 	else:
-		name.text += new_number
+		name.text += str(new_number)
 
 
 def translate_xyz(lines, translate_X, translate_Y, translate_Z):
